@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Todo List Tree View -->
+    <record id="view_todo_list_tree" model="ir.ui.view">
+        <field name="name">todo.list.tree</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <list string="Todo Lists" decoration-muted="status=='complete'" decoration-info="status=='in_progress'" decoration-bf="status=='draft'">
+                <field name="title"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="status" decoration-success="status=='complete'" decoration-warning="status=='in_progress'" decoration-muted="status=='draft'"/>
+                <field name="participant_ids" widget="many2many_tags"/>
+                <field name="task_count"/>
+                <field name="completed_task_count"/>
+                <field name="progress_percentage" widget="progressbar"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Todo List Form View -->
+    <record id="view_todo_list_form" model="ir.ui.view">
+        <field name="name">todo.list.form</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <form string="Todo List">
+                <header>
+                    <button name="action_start_progress" string="Start Progress" type="object" 
+                            class="btn-primary" invisible="status != 'draft'"/>
+                    <button name="action_mark_complete" string="Mark Complete" type="object" 
+                            class="btn-success" invisible="not can_mark_complete"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,in_progress,complete"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-tasks">
+                            <field string="Tasks" name="task_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="title" readonly="status == 'complete'"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" 
+                                   readonly="status == 'complete'"/>
+                        </group>
+                        <group>
+                            <field name="start_date" readonly="status == 'complete'"/>
+                            <field name="end_date" readonly="status == 'complete'"/>
+                            <field name="participant_ids" widget="many2many_tags" 
+                                   readonly="status == 'complete'"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Progress">
+                        <group>
+                            <field name="task_count"/>
+                            <field name="completed_task_count"/>
+                        </group>
+                        <group>
+                            <field name="progress_percentage" widget="progressbar"/>
+                            <field name="all_tasks_completed"/>
+                            <field name="can_mark_complete" invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids" readonly="status == 'complete'">
+                                <list string="Tasks" editable="bottom" decoration-success="completed==True">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="completed" column_invisible="parent.status != 'in_progress'"/>
+                                    <field name="todo_list_status" invisible="1"/>
+                                </list>
+                                <form string="Task">
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                        <field name="completed" invisible="todo_list_status != 'in_progress'"/>
+                                        <field name="todo_list_status" invisible="1"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Todo List Search View -->
+    <record id="view_todo_list_search" model="ir.ui.view">
+        <field name="name">todo.list.search</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <search string="Todo Lists">
+                <field name="title"/>
+                <field name="tag_ids"/>
+                <field name="participant_ids"/>
+                <field name="status"/>
+                
+                <filter string="Draft" name="draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('status', '=', 'in_progress')]"/>
+                <filter string="Complete" name="complete" domain="[('status', '=', 'complete')]"/>
+                
+                <separator/>
+                <filter string="Uncomplete" name="uncomplete" domain="[('status', '!=', 'complete')]"/>
+                
+                <separator/>
+                <filter string="My Todo Lists" name="my_todos" domain="[('participant_ids', 'in', uid)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Start Date" name="group_start_date" context="{'group_by': 'start_date'}"/>
+                    <filter string="Tags" name="group_tags" context="{'group_by': 'tag_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+</odoo>

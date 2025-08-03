@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Todo Task Tree View -->
+    <record id="view_todo_task_tree" model="ir.ui.view">
+        <field name="name">todo.task.tree</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <list string="Tasks" decoration-success="completed==True" decoration-muted="completed==True">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="todo_list_id"/>
+                <field name="completed"/>
+                <field name="todo_list_status"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Todo Task Form View -->
+    <record id="view_todo_task_form" model="ir.ui.view">
+        <field name="name">todo.task.form</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <form string="Task">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="todo_list_id"/>
+                        </group>
+                        <group>
+                            <field name="completed" invisible="todo_list_status != 'in_progress'"/>
+                            <field name="sequence"/>
+                            <field name="todo_list_status" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+</odoo>

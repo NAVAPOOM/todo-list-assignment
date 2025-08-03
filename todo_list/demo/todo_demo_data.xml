@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Todo Lists -->
+        <record id="demo_todo_1" model="todo.list">
+            <field name="title">Project Launch Preparation</field>
+            <field name="start_date">2024-01-15</field>
+            <field name="end_date">2024-01-30</field>
+            <field name="status">in_progress</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('tag_work')])]"/>
+            <field name="participant_ids" eval="[(6, 0, [ref('base.user_admin')])]"/>
+        </record>
+        
+        <record id="demo_todo_2" model="todo.list">
+            <field name="title">Birthday Party Planning</field>
+            <field name="start_date">2024-02-01</field>
+            <field name="end_date">2024-02-15</field>
+            <field name="status">draft</field>
+            <field name="tag_ids" eval="[(6, 0, [ref('tag_event'), ref('tag_life_achievement')])]"/>
+            <field name="participant_ids" eval="[(6, 0, [ref('base.user_admin')])]"/>
+        </record>
+        
+        <!-- Demo Tasks -->
+        <record id="demo_task_1" model="todo.task">
+            <field name="name">Design mockups</field>
+            <field name="description">Create UI/UX designs for the project</field>
+            <field name="completed">True</field>
+            <field name="todo_list_id" ref="demo_todo_1"/>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="demo_task_2" model="todo.task">
+            <field name="name">Setup development environment</field>
+            <field name="description">Configure tools and dependencies</field>
+            <field name="completed">True</field>
+            <field name="todo_list_id" ref="demo_todo_1"/>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="demo_task_3" model="todo.task">
+            <field name="name">Implement core features</field>
+            <field name="description">Build main functionality</field>
+            <field name="completed">False</field>
+            <field name="todo_list_id" ref="demo_todo_1"/>
+            <field name="sequence">30</field>
+        </record>
+        
+        <record id="demo_task_4" model="todo.task">
+            <field name="name">Book venue</field>
+            <field name="description">Find and reserve party location</field>
+            <field name="completed">False</field>
+            <field name="todo_list_id" ref="demo_todo_2"/>
+            <field name="sequence">10</field>
+        </record>
+        
+    </data>
+</odoo>
